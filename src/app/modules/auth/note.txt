@@ -1,0 +1,7 @@
+ {
+   "password": "string",
+  "role":"user",
+  "name": "Tareq",
+  "email": "tareq@gmail.com"
+   
+ }

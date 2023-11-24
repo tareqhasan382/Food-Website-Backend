@@ -1,0 +1,2 @@
+Fri Jun 23 2023 19:39:27 } [CWH] error: Cast to ObjectId failed for value "get-cows" (type string) at path "_id" for model "Cow"
+Fri Jun 23 2023 19:43:32 } [CWH] error: cow not found !

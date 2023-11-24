@@ -1,0 +1,226 @@
+export const data = [
+  {
+    id: 1,
+    name: "Double Cheese Salads",
+    category: "salads",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 2,
+    name: "Double Cheeseburger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 3,
+    name: "Double Cheese Salads",
+    category: "salads",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 4,
+    name: "Double Cheese Chiken",
+    category: "chiken",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 5,
+    name: "Double Cheese Chiken",
+    category: "chiken",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 6,
+    name: "Double Cheeseburger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 7,
+    name: "Double Cheeseburger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 8,
+    name: "Double Cheese Pizza",
+    category: "pizza",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 9,
+    name: "Double Cheeseburger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 10,
+    name: "Double Cheese Pizza",
+    category: "pizza",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 11,
+    name: "Double Cheeseburger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+];
+
+export const categorys = [
+  {
+    id: 1,
+    name: "Fast Food",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 2,
+    name: "Burger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 3,
+    name: "Salads",
+    category: "salads",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 4,
+    name: "Chiken",
+    category: "chiken",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 5,
+    name: "Chiken",
+    category: "chiken",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 6,
+    name: "Burger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 7,
+    name: "Burger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/0QXhPwB/Brown-Simple-Restaurant-Special-Menu-Promotion-Card-1.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 8,
+    name: "Pizza",
+    category: "pizza",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 9,
+    name: "Burger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 10,
+    name: "Pizza",
+    category: "pizza",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+  {
+    id: 11,
+    name: "Burger",
+    category: "burger",
+    Image:
+      "https://i.ibb.co/BjhYmqg/Brown-Simple-Restaurant-Special-Menu-Promotion-Card.jpg",
+    price: "$99.00",
+  },
+];
+
+
+=============================================================================
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from 'http-status'
+import ApiError from '../../../errors/ApiError'
+import { IFood } from './food.interface'
+import FoodModel from './food.model'
+
+const createFood = async (payload: IFood): Promise<IFood | null> => {
+  const createdUser = await FoodModel.create(payload)
+  if (!createdUser) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Field to create Gellery!')
+  }
+  return createdUser
+}
+const getFoods = async (): Promise<IFood[] | null> => {
+  // const query = category ? { category } : {};
+
+  const isUserExist = await FoodModel.find()
+
+  return isUserExist
+}
+const getFood = async (userId: string): Promise<IFood[] | null> => {
+  const isUserExist = await FoodModel.find({ userId: userId })
+
+  return isUserExist
+}
+const updateFood = async (userId: string): Promise<IFood[] | null> => {
+  const isUserExist = await FoodModel.find({ userId: userId })
+
+  return isUserExist
+}
+const deleteFood = async (userId: string): Promise<IFood[] | null> => {
+  const isUserExist = await FoodModel.find({ userId: userId })
+
+  return isUserExist
+}
+export const FoodService = {
+  createFood,
+  getFoods,
+  getFood,
+  updateFood,
+  deleteFood,
+}

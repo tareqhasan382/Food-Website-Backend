@@ -1,0 +1,26 @@
+import { ZodError, ZodIssue } from 'zod'
+import {
+  IGenericErrorMessage,
+  IGenericErrorResponse,
+} from '../app/middlewares/globalErrorHandler'
+
+export const handleZodError = (error: ZodError): IGenericErrorResponse => {
+  const errors: IGenericErrorMessage[] = error.issues.map((issue: ZodIssue) => {
+    return {
+      path: issue?.path[issue.path.length - 1],
+      message: issue?.message,
+    }
+  })
+  // console.log(
+  //   'handleZodError',
+  //   error.issues.map(issue => issue.path),
+  //   'Zod Error'
+  // )
+
+  const statusCode = 400
+  return {
+    statusCode,
+    message: 'Validation Error',
+    errorMessages: errors,
+  }
+}

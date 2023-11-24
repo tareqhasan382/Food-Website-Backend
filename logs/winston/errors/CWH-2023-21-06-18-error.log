@@ -1,0 +1,1 @@
+Wed Jun 21 2023 18:56:31 } [CWH] error: Cast to ObjectId failed for value "{ seller: '6492e731606a4794ffa9b96d' }" (type Object) at path "_id" for model "Cow"

@@ -1,0 +1,1 @@
+Wed Jun 21 2023 21:59:54 } [CWH] error: Cast to ObjectId failed for value "{}" (type Object) at path "_id" for model "Cow"
