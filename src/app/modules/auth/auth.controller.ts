@@ -10,7 +10,7 @@ import AuthModel from './auth.model'
 import bcrypt from 'bcrypt'
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const data = req.body
- // console.log('pyload:', data)
+  // console.log('pyload:', data)
   const result = await AuthService.createUser(data)
 
   sendResponse<IUser>(res, {

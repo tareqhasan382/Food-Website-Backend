@@ -3,7 +3,7 @@ import { Model } from 'mongoose'
 export type IUser = {
   _id: string
   password: string
-  role?: 'user'
+  role?: string
   name: string
   email: string
 }

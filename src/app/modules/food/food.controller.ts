@@ -61,10 +61,10 @@ const updateFood = catchAsync(async (req: Request, res: Response) => {
 const deleteFood = catchAsync(async (req: Request, res: Response) => {
   // const id = req.params
   const data: any = req.params
-  //console.log('payload:', userId)
+  //console.log('payload:', data.id)
   const result = await FoodService.deleteFood(data?.id)
 
-  sendResponse<IFood[]>(res, {
+  sendResponse<IFood>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'data deleted successfully!',

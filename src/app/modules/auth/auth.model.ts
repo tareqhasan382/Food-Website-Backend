@@ -7,8 +7,8 @@ const authSchema = new Schema<IUser>(
     password: { type: String, required: true, select: false },
     role: {
       type: String,
-      enum: ['user'],
-      required: true,
+      enum: ['admin', 'user', 'superAdmin'],
+      default: 'user',
     },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },

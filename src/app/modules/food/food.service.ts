@@ -16,7 +16,7 @@ const createFood = async (payload: IFood): Promise<IFood | null> => {
 }
 const getFoods = async (payload: any): Promise<IGenericResponse<IFood[]>> => {
   const { page, limit, search, filterField, sortOrder, sortField } = payload
-  console.log('payload:', payload)
+  // console.log('payload:', payload)
   const options = {
     page: parseInt(page as string),
     limit: parseInt(limit as string),
@@ -69,8 +69,8 @@ const updateFood = async (userId: string): Promise<IFood[] | null> => {
 
   return isUserExist
 }
-const deleteFood = async (userId: string): Promise<IFood[] | null> => {
-  const isUserExist = await FoodModel.find({ userId: userId })
+const deleteFood = async (payload: string): Promise<IFood | null> => {
+  const isUserExist = await FoodModel.findByIdAndDelete(payload)
 
   return isUserExist
 }
