@@ -28,6 +28,8 @@ const orderSchema = new Schema<IOrder>(
     subtotal: { type: Number, required: true, default: 0 },
     discount: { type: Number, required: true, default: 0 },
     deliveryCharge: { type: Number, required: true, default: 0 },
+    couponCode: { type: String, trim: true },
+    couponDiscount: { type: Number, default: 0, min: 0 },
     total: { type: Number, required: true, default: 0 },
     status: {
       type: String,
@@ -53,6 +55,9 @@ const orderSchema = new Schema<IOrder>(
   },
   { timestamps: true }
 )
+
+orderSchema.index({ status: 1, createdAt: -1 })
+orderSchema.index({ createdAt: -1 })
 
 const OrderModel = model<IOrder, IOrderModel>('order', orderSchema)
 

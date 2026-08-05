@@ -65,6 +65,8 @@ export type IOrder = {
   subtotal: number
   discount: number
   deliveryCharge: number
+  couponCode?: string
+  couponDiscount?: number
   total: number
   status: OrderStatus
   paymentId?: Types.ObjectId

@@ -14,6 +14,9 @@ import { WishlistRoute } from './app/modules/wishlist/wishlist.route'
 import { PaymentRoute } from './app/modules/payment/payment.route'
 import { OrderRoute } from './app/modules/order/order.route'
 import { ReviewRoute } from './app/modules/review/review.route'
+import { DashboardRoute } from './app/modules/dashboard/dashboard.route'
+import { CouponRoute } from './app/modules/coupon/coupon.route'
+import { InvoiceRoute } from './app/modules/invoice/invoice.route'
 
 const corsOptions = {
   origin: [
@@ -46,6 +49,9 @@ app.use('/api/v1', WishlistRoute)
 app.use('/api/v1', PaymentRoute)
 app.use('/api/v1', OrderRoute)
 app.use('/api/v1', ReviewRoute)
+app.use('/api/v1', DashboardRoute)
+app.use('/api/v1', CouponRoute)
+app.use('/api/v1', InvoiceRoute)
 //Testing Route
 // app.get('/', async (req: Request, res: Response, next: NextFunction) => {
 //   throw new Error('Testing Error log')

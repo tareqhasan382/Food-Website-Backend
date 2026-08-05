@@ -10,6 +10,8 @@ export type ICart = {
   _id: string
   userId: Types.ObjectId
   items: ICartItem[]
+  couponCode?: string
+  couponDiscount?: number
 }
 
 export type ICartModel = Model<ICart, Record<string, unknown>>
@@ -29,5 +31,7 @@ export type ICartResponse = {
   subtotal: number
   discount: number
   deliveryCharge: number
+  couponCode?: string
+  couponDiscount: number
   total: number
 }

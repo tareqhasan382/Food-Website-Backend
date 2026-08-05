@@ -5,7 +5,7 @@ import { Secret } from 'jsonwebtoken'
 import ApiError from '../../../errors/ApiError'
 import config from '../../../config'
 import { jwtHelpers } from '../../../helpers/jwtHelpers'
-import { emailService } from '../../../shared/email'
+import { emailService } from '../email/email.service'
 import { AuthRepository } from './auth.repository'
 import {
   IChangePassword,
@@ -56,11 +56,10 @@ const registerUser = async (
     verificationTokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
   })
 
-  try {
-    await emailService.sendVerificationEmail(user.email, verificationToken)
-  } catch (error) {
-    console.error('Failed to send verification email:', error)
-  }
+  await emailService.sendVerificationEmail(user.email, {
+    verifyUrl: `${config.client_url}/verify-email?token=${verificationToken}`,
+  })
+  await emailService.sendWelcomeEmail(user.email, { name: user.name })
 
   const safeUser: Partial<IUser> = { ...user }
   delete safeUser.password
@@ -207,11 +206,9 @@ const forgotPassword = async (email: string): Promise<void> => {
     }
   )
 
-  try {
-    await emailService.sendResetPasswordEmail(email, passwordResetToken)
-  } catch (error) {
-    console.error('Failed to send reset password email:', error)
-  }
+  await emailService.sendResetPasswordEmail(email, {
+    resetUrl: `${config.client_url}/reset-password?token=${passwordResetToken}`,
+  })
 }
 
 const resetPassword = async (
@@ -239,13 +236,19 @@ const resetPassword = async (
       refreshToken: '',
     }
   )
+
+  await emailService.sendPasswordChangedEmail(user.email, { name: user.name })
 }
 
 const changePassword = async (
   userId: string,
   payload: IChangePassword
 ): Promise<void> => {
-  const user = await AuthRepository.findById(userId, { password: 1 })
+  const user = await AuthRepository.findById(userId, {
+    password: 1,
+    name: 1,
+    email: 1,
+  })
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist')
   }
@@ -263,6 +266,10 @@ const changePassword = async (
     { _id: userId },
     { password: hashedPassword, refreshToken: '' }
   )
+
+  await emailService.sendPasswordChangedEmail(user.email, {
+    name: user.name,
+  })
 }
 
 const getProfile = async (userId: string): Promise<IUser | null> => {

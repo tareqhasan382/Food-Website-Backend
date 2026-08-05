@@ -16,6 +16,10 @@ import {
 import { CartService } from '../cart/cart.service'
 import CartModel from '../cart/cart.model'
 import PaymentModel from '../payment/payment.model'
+import { CouponService } from '../coupon/coupon.service'
+import AuthModel from '../auth/auth.model'
+import { emailService } from '../email/email.service'
+import { InvoiceService } from '../invoice/invoice.service'
 
 const generateOrderNumber = async (): Promise<string> => {
   for (let attempt = 0; attempt < 5; attempt++) {
@@ -79,6 +83,11 @@ const placeOrder = async (
   }))
 
   const orderNumber = await generateOrderNumber()
+
+  if (cart.couponCode) {
+    await CouponService.consumeCoupon(cart.couponCode)
+  }
+
   const order = await OrderModel.create({
     orderNumber,
     userId,
@@ -86,6 +95,8 @@ const placeOrder = async (
     subtotal: cart.subtotal,
     discount: cart.discount,
     deliveryCharge: cart.deliveryCharge,
+    couponCode: cart.couponCode,
+    couponDiscount: cart.couponDiscount ?? 0,
     total: cart.total,
     status: 'pending',
     paymentId,
@@ -97,8 +108,31 @@ const placeOrder = async (
 
   await CartModel.findOneAndUpdate(
     { userId },
-    { $set: { items: [] } }
+    {
+      $set: { items: [], couponDiscount: 0 },
+      $unset: { couponCode: 1 },
+    }
   )
+
+  const user = await AuthModel.findById(userId, 'name email')
+  if (user) {
+    await emailService.sendOrderPlacedEmail(user.email, {
+      name: user.name,
+      orderNumber,
+      items: items.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        lineTotal: item.lineTotal,
+      })),
+      subtotal: cart.subtotal,
+      discount: cart.discount,
+      deliveryCharge: cart.deliveryCharge,
+      couponDiscount: cart.couponDiscount ?? 0,
+      total: cart.total,
+    })
+  }
+
+  await InvoiceService.ensureInvoice(order._id.toString())
 
   return order.toObject()
 }
@@ -166,6 +200,8 @@ const cancelOrder = async (
   order.statusHistory.push(historyEntry)
   await order.save()
 
+  await InvoiceService.ensureInvoice(order._id.toString())
+
   return order.toObject()
 }
 
@@ -198,6 +234,19 @@ const updateStatus = async (
   order.status = status
   order.statusHistory.push(historyEntry)
   await order.save()
+
+  if (status === 'delivered') {
+    const user = await AuthModel.findById(order.userId, 'name email')
+    if (user) {
+      await emailService.sendOrderDeliveredEmail(user.email, {
+        name: user.name,
+        orderNumber: order.orderNumber,
+        total: order.total,
+      })
+    }
+  }
+
+  await InvoiceService.ensureInvoice(order._id.toString())
 
   return order.toObject()
 }

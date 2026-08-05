@@ -13,6 +13,19 @@ import {
 } from './payment.interface'
 import { CartService } from '../cart/cart.service'
 import CartModel from '../cart/cart.model'
+import AuthModel from '../auth/auth.model'
+import { emailService } from '../email/email.service'
+import { InvoiceService } from '../invoice/invoice.service'
+import OrderModel from '../order/order.model'
+
+const syncLinkedInvoice = async (
+  payment: InstanceType<typeof PaymentModel>
+): Promise<void> => {
+  const linkedOrder = await OrderModel.findOne({ paymentId: payment._id })
+  if (linkedOrder) {
+    await InvoiceService.ensureInvoice(linkedOrder._id.toString())
+  }
+}
 
 const findPayment = async (
   userId: string,
@@ -90,6 +103,19 @@ const syncFromIntent = async (
         { userId: payment.userId },
         { $set: { items: [] } }
       )
+
+      const user = await AuthModel.findById(payment.userId, 'name email')
+      if (user) {
+        await emailService.sendPaymentSuccessEmail(user.email, {
+          name: user.name,
+          amount: payment.amount,
+          currency: payment.currency,
+          transactionId: payment.transactionId,
+          paidAt: payment.paidAt,
+        })
+      }
+
+      await syncLinkedInvoice(payment)
     }
   }
 
@@ -229,6 +255,7 @@ const refundPayment = async (
     totalRefunded >= payment.amount ? 'refunded' : 'partially_refunded'
 
   await payment.save()
+  await syncLinkedInvoice(payment)
   return payment.toObject()
 }
 

@@ -15,6 +15,8 @@ const cartSchema = new Schema<ICart>(
         quantity: { type: Number, required: true, min: 1, default: 1 },
       },
     ],
+    couponCode: { type: String, uppercase: true, trim: true },
+    couponDiscount: { type: Number, default: 0, min: 0 },
   },
   { timestamps: true }
 )

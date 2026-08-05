@@ -7,6 +7,8 @@ export enum Permissions {
   // orders
   ORDER_READ = 'order:read',
   ORDER_CREATE = 'order:create',
+  // coupons
+  COUPON_USE = 'coupon:use',
   // reviews
   REVIEW_CREATE = 'review:create',
   REVIEW_READ = 'review:read',
@@ -36,6 +38,7 @@ export const RolePermissions: Record<UserRole, string[]> = {
     Permissions.PROFILE_UPDATE,
     Permissions.ORDER_READ,
     Permissions.ORDER_CREATE,
+    Permissions.COUPON_USE,
     Permissions.REVIEW_READ,
     Permissions.REVIEW_CREATE,
     Permissions.REVIEW_UPDATE,

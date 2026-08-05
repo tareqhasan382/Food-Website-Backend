@@ -24,6 +24,9 @@ const authSchema = new Schema<IUser>(
   { timestamps: true }
 )
 
+authSchema.index({ role: 1, createdAt: -1 })
+authSchema.index({ createdAt: -1 })
+
 authSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next()

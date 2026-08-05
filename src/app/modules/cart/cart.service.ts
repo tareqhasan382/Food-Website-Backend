@@ -6,6 +6,8 @@ import FoodModel from '../food/food.model'
 import CartModel from './cart.model'
 import { ICart, ICartItemResponse, ICartResponse } from './cart.interface'
 import { IFood } from '../food/food.interface'
+import CouponModel from '../coupon/coupon.model'
+import { validateCouponAgainstSubtotal } from '../coupon/coupon.utils'
 
 const findFoodOrThrow = async (foodId: string): Promise<IFood> => {
   const food = await FoodModel.findById(foodId)
@@ -106,6 +108,8 @@ const clearCart = async (userId: string): Promise<void> => {
   }
 
   cart.items = []
+  cart.couponCode = undefined
+  cart.couponDiscount = 0
   await cart.save()
 }
 
@@ -143,12 +147,32 @@ const buildCartResponse = async (
     0
   )
   const discount = items.reduce((sum, item) => sum + item.itemDiscount, 0)
-  const afterDiscount = subtotal - discount
   const deliveryCharge =
     items.length === 0 || subtotal >= Number(config.delivery.free_above)
       ? 0
       : Number(config.delivery.charge)
-  const total = afterDiscount + deliveryCharge
+
+  let couponCode: string | undefined
+  let couponDiscount = 0
+  if (cart.couponCode) {
+    const coupon = await CouponModel.findOne({ code: cart.couponCode })
+    if (coupon) {
+      const state = validateCouponAgainstSubtotal(coupon, subtotal)
+      if (state.valid) {
+        couponCode = coupon.code
+        couponDiscount = state.discount
+      }
+    }
+    if (!couponCode) {
+      await CartModel.updateOne(
+        { userId },
+        { $unset: { couponCode: 1 }, $set: { couponDiscount: 0 } }
+      )
+    }
+  }
+
+  const afterDiscount = subtotal - discount
+  const total = Math.max(afterDiscount - couponDiscount + deliveryCharge, 0)
 
   return {
     _id: String(cart._id),
@@ -158,6 +182,8 @@ const buildCartResponse = async (
     subtotal,
     discount,
     deliveryCharge,
+    couponCode,
+    couponDiscount,
     total,
   }
 }
