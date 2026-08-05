@@ -7,6 +7,13 @@ import httpStatus from 'http-status'
 import { AuthRoute } from './app/modules/auth/auth.route'
 import cookieParser from 'cookie-parser'
 import { FoodRoute } from './app/modules/food/food.route'
+import { UserRoute } from './app/modules/user/user.route'
+import { CategoryRoute } from './app/modules/category/category.route'
+import { CartRoute } from './app/modules/cart/cart.route'
+import { WishlistRoute } from './app/modules/wishlist/wishlist.route'
+import { PaymentRoute } from './app/modules/payment/payment.route'
+import { OrderRoute } from './app/modules/order/order.route'
+import { ReviewRoute } from './app/modules/review/review.route'
 
 const corsOptions = {
   origin: [
@@ -20,6 +27,11 @@ const corsOptions = {
 app.use(cors(corsOptions))
 // app.use(cors(corsOptions))
 app.use(cookieParser())
+// Stripe webhook needs the raw body before the JSON parser consumes it
+app.use(
+  '/api/v1/payments/webhook',
+  express.raw({ type: 'application/json' })
+)
 //parser
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -27,6 +39,13 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/v1', AuthRoute)
 app.use('/api/v1', FoodRoute)
+app.use('/api/v1', UserRoute)
+app.use('/api/v1', CategoryRoute)
+app.use('/api/v1', CartRoute)
+app.use('/api/v1', WishlistRoute)
+app.use('/api/v1', PaymentRoute)
+app.use('/api/v1', OrderRoute)
+app.use('/api/v1', ReviewRoute)
 //Testing Route
 // app.get('/', async (req: Request, res: Response, next: NextFunction) => {
 //   throw new Error('Testing Error log')

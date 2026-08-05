@@ -9,6 +9,7 @@ process.on('uncaughtException', error => {
   console.log(error)
   process.exit(1)
 })
+
 let server: Server
 async function main() {
   try {

@@ -7,10 +7,35 @@ export default {
   port: process.env.PORT,
   database_url: process.env.DATABASE_URL,
   bycrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
+  client_url: process.env.CLIENT_URL || 'http://localhost:5173',
   jwt: {
     secret: process.env.JWT_SECRET,
     refresh_secret: process.env.JWT_REFRESH_SECRET,
     expires_in: process.env.JWT_EXPIRES_IN,
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
+  },
+  email: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: process.env.SMTP_SECURE === 'true',
+    from: process.env.EMAIL_FROM,
+  },
+  cloudinary: {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    folder: process.env.CLOUDINARY_FOLDER || 'food-app/foods',
+  },
+  delivery: {
+    charge: Number(process.env.DELIVERY_CHARGE) || 5,
+    free_above: Number(process.env.FREE_DELIVERY_THRESHOLD) || 500,
+  },
+  stripe: {
+    secret_key: process.env.STRIPE_SECRET_KEY || '',
+    publishable_key: process.env.STRIPE_PUBLISHABLE_KEY || '',
+    webhook_secret: process.env.STRIPE_WEBHOOK_SECRET || '',
+    currency: process.env.STRIPE_CURRENCY || 'usd',
   },
 }

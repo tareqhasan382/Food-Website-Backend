@@ -58,6 +58,25 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     statusCode = simplifiedError.statusCode
     message = simplifiedError.message
     errorMessages = simplifiedError.errorMessages
+  } else if (error?.name === 'CastError') {
+    const simplifiedError = handleCastError(error)
+    statusCode = simplifiedError.statusCode
+    message = simplifiedError.message
+    errorMessages = simplifiedError.errorMessages
+  } else if (error?.code === 11000) {
+    const simplifiedError = handleDuplicateError(error)
+    statusCode = simplifiedError.statusCode
+    message = simplifiedError.message
+    errorMessages = simplifiedError.errorMessages
+  } else if (error?.name === 'MulterError') {
+    statusCode = 400
+    message = error?.message
+    errorMessages = [
+      {
+        path: '',
+        message: error?.message,
+      },
+    ]
   } else if (error instanceof ApiError) {
     statusCode = error?.statusCode
     message = error?.message
@@ -88,6 +107,43 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     stack: config.env !== 'production' ? error?.stack : undefined,
   })
   next()
+}
+
+//=======handleCastError======================
+export const handleCastError = (
+  error: mongoose.Error.CastError
+): IGenericErrorResponse => {
+  const errors: IGenericErrorMessage[] = [
+    {
+      path: error.path,
+      message: `Invalid ${error.path}: ${error.value}`,
+    },
+  ]
+  const statusCode = 400
+  return {
+    statusCode,
+    message: 'Cast Error',
+    errorMessages: errors,
+  }
+}
+
+//=======handleDuplicateError======================
+export const handleDuplicateError = (
+  error: mongoose.mongo.MongoServerError
+): IGenericErrorResponse => {
+  const value = error?.keyValue ? Object.values(error.keyValue)[0] : 'value'
+  const errors: IGenericErrorMessage[] = [
+    {
+      path: '',
+      message: `Duplicate field value: ${value}. Please use another value!`,
+    },
+  ]
+  const statusCode = 400
+  return {
+    statusCode,
+    message: 'Duplicate field value entered',
+    errorMessages: errors,
+  }
 }
 
 export default globalErrorHandler

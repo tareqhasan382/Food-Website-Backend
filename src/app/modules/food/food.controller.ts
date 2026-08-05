@@ -1,80 +1,83 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request, Response } from 'express'
 import httpStatus from 'http-status'
 import catchAsync from '../../../shared/catchAsync'
 import sendResponse from '../../../shared/sendResponse'
-import { Request, Response } from 'express'
+import { pick } from '../../../helpers/pick'
 import { FoodService } from './food.service'
-import { IFood } from './food.interface'
+import {
+  IFood,
+  IFoodFilters,
+  IPaginationOptions,
+  FoodFilterableFields,
+  FoodPaginationFields,
+} from './food.interface'
 
 const createFood = catchAsync(async (req: Request, res: Response) => {
-  const data = req.body
-  //console.log('data:', data)
-  const result = await FoodService.createFood(data)
+  const result = await FoodService.createFood(req.body)
+
+  sendResponse<IFood>(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Food created successfully!',
+    data: result,
+  })
+})
+
+const getFood = catchAsync(async (req: Request, res: Response) => {
+  const result = await FoodService.getFood(req.params.id)
 
   sendResponse<IFood>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: ' Food created successfully!',
+    message: 'Food fetched successfully!',
     data: result,
   })
 })
-///admin/login
-const getFoods = catchAsync(async (req: Request, res: Response) => {
-  // console.log('query:', req.query)
-  const result = await FoodService.getFoods(req.query)
 
-  res.status(200).json({
+const updateFood = catchAsync(async (req: Request, res: Response) => {
+  const result = await FoodService.updateFood(req.params.id, req.body)
+
+  sendResponse<IFood>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Data retrive successfully !!',
-    //data: result,
+    message: 'Food updated successfully!',
+    data: result,
+  })
+})
+
+const deleteFood = catchAsync(async (req: Request, res: Response) => {
+  const result = await FoodService.deleteFood(req.params.id)
+
+  sendResponse<IFood>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Food deleted successfully!',
+    data: result,
+  })
+})
+
+const getFoods = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, FoodFilterableFields) as unknown as IFoodFilters
+  const paginationOptions = pick(
+    req.query,
+    FoodPaginationFields
+  ) as unknown as IPaginationOptions
+
+  const result = await FoodService.getAllFoods(filters, paginationOptions)
+
+  sendResponse<IFood[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Foods fetched successfully!',
     meta: result.meta,
     data: result.data,
   })
 })
-const getFood = catchAsync(async (req: Request, res: Response) => {
-  // const id = req.params
-  const data: any = req.params
-  //console.log('payload:', userId)
-  const result = await FoodService.getFood(data?.id)
 
-  sendResponse<IFood[]>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'data retrive in successfully!',
-    data: result,
-  })
-})
-const updateFood = catchAsync(async (req: Request, res: Response) => {
-  // const id = req.params
-  const data: any = req.params
-  //console.log('payload:', userId)
-  const result = await FoodService.updateFood(data?.id)
-
-  sendResponse<IFood[]>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'data updated successfully!',
-    data: result,
-  })
-})
-const deleteFood = catchAsync(async (req: Request, res: Response) => {
-  // const id = req.params
-  const data: any = req.params
-  //console.log('payload:', data.id)
-  const result = await FoodService.deleteFood(data?.id)
-
-  sendResponse<IFood>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'data deleted successfully!',
-    data: result,
-  })
-})
 export const FoodController = {
   createFood,
-  getFoods,
   getFood,
   updateFood,
   deleteFood,
+  getFoods,
 }
