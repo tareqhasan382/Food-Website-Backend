@@ -139,7 +139,7 @@ const refreshToken = async (
     { refreshToken: newRefreshToken }
   )
 
-  return { accessToken }
+  return { accessToken, refreshToken: newRefreshToken }
 }
 
 const logoutUser = async (userId: string): Promise<void> => {

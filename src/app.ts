@@ -1,5 +1,6 @@
 import express, { Application, NextFunction, Request, Response } from 'express'
 const app: Application = express()
+app.set('trust proxy', 1) // Render/Vercel terminate TLS; enables secure cookies behind the proxy
 import cors from 'cors'
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
 import httpStatus from 'http-status'

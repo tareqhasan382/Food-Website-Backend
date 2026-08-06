@@ -9,7 +9,9 @@ import { ILoginUserResponse, IRefreshTokenResponse, IUser } from './auth.interfa
 const cookieOptions = {
   secure: config.env === 'production',
   httpOnly: true,
-  sameSite: 'lax' as const,
+  sameSite: (config.env === 'production' ? 'none' : 'lax') as
+    | 'none'
+    | 'lax',
   maxAge: 7 * 24 * 60 * 60 * 1000,
 }
 
@@ -38,16 +40,16 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 })
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
-  const { refreshToken } = req.cookies
-  const result = await AuthService.refreshToken(refreshToken)
+  const { refreshToken: currentRefreshToken } = req.cookies
+  const result = await AuthService.refreshToken(currentRefreshToken)
 
-  res.cookie('refreshToken', refreshToken, cookieOptions)
+  res.cookie('refreshToken', result.refreshToken, cookieOptions)
 
   sendResponse<IRefreshTokenResponse>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Access token refreshed successfully!',
-    data: result,
+    data: { accessToken: result.accessToken },
   })
 })
 
