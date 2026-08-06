@@ -94,6 +94,34 @@ const getBestSellingFoods = catchAsync(
   }
 )
 
+const getCategorySales = catchAsync(async (req: Request, res: Response) => {
+  const daysRaw = Number(req.query.days)
+  const days = Number.isFinite(daysRaw) && daysRaw > 0 ? daysRaw : null
+  const limit = parseQueryNumber(req.query.limit, 15)
+  const result = await DashboardService.getCategorySales(days, limit)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Category sales fetched successfully!',
+    data: result,
+  })
+})
+
+const getCouponUsage = catchAsync(async (req: Request, res: Response) => {
+  const daysRaw = Number(req.query.days)
+  const days = Number.isFinite(daysRaw) && daysRaw > 0 ? daysRaw : null
+  const limit = parseQueryNumber(req.query.limit, 20)
+  const result = await DashboardService.getCouponUsage(days, limit)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Coupon usage fetched successfully!',
+    data: result,
+  })
+})
+
 export const DashboardController = {
   getOverview,
   getDailySales,
@@ -102,4 +130,6 @@ export const DashboardController = {
   getOrdersChart,
   getUsersChart,
   getBestSellingFoods,
+  getCategorySales,
+  getCouponUsage,
 }

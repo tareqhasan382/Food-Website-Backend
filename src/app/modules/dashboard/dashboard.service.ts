@@ -1,8 +1,11 @@
 import OrderModel from '../order/order.model'
+import FoodModel from '../food/food.model'
 import { PAID_ORDER_STATUSES } from '../order/order.interface'
 import AuthModel from '../auth/auth.model'
 import {
   BestSellingFood,
+  CategorySalesPoint,
+  CouponUsagePoint,
   DailySalesPoint,
   DashboardOverview,
   MonthlySalesPoint,
@@ -328,6 +331,108 @@ const getOrdersChart = async (days: number): Promise<OrdersPoint[]> => {
   }))
 }
 
+const getCategorySales = async (
+  days: number | null,
+  limit: number
+): Promise<CategorySalesPoint[]> => {
+  const match: Record<string, unknown> = {
+    status: { $in: PAID_ORDER_STATUSES },
+  }
+  if (days && days > 0) {
+    match.createdAt = { $gte: startOfLastNDays(days) }
+  }
+
+  const rows = await OrderModel.aggregate<{
+    _id: unknown
+    category: string
+    foodId: string
+    revenue: number
+    quantity: number
+  }>([
+    { $match: match },
+    { $unwind: '$items' },
+    {
+      $group: {
+        _id: '$items.foodId',
+        revenue: { $sum: '$items.lineTotal' },
+        quantity: { $sum: '$items.quantity' },
+      },
+    },
+    {
+      $lookup: {
+        from: FoodModel.collection.name,
+        localField: '_id',
+        foreignField: '_id',
+        as: 'food',
+      },
+    },
+    { $unwind: { path: '$food', preserveNullAndEmptyArrays: true } },
+    {
+      $project: {
+        foodId: { $toString: '$_id' },
+        category: { $ifNull: ['$food.category', 'Uncategorized'] },
+        revenue: 1,
+        quantity: 1,
+      },
+    },
+    {
+      $group: {
+        _id: '$category',
+        revenue: { $sum: '$revenue' },
+        quantity: { $sum: '$quantity' },
+      },
+    },
+    { $sort: { revenue: -1, quantity: -1 } },
+    { $limit: limit },
+    {
+      $project: {
+        _id: 0,
+        category: { $toString: '$_id' },
+        revenue: 1,
+        quantity: 1,
+      },
+    },
+  ])
+  return rows as CategorySalesPoint[]
+}
+
+const getCouponUsage = async (
+  days: number | null,
+  limit: number
+): Promise<CouponUsagePoint[]> => {
+  const match: Record<string, unknown> = {
+    couponCode: { $exists: true, $ne: null, $type: 'string' },
+    status: { $in: PAID_ORDER_STATUSES },
+  }
+  if (days && days > 0) {
+    match.createdAt = { $gte: startOfLastNDays(days) }
+  }
+
+  const rows = await OrderModel.aggregate<CouponUsagePoint>([
+    { $match: match },
+    {
+      $group: {
+        _id: '$couponCode',
+        uses: { $sum: 1 },
+        discount: { $sum: { $ifNull: ['$couponDiscount', 0] } },
+        subtotal: { $sum: '$subtotal' },
+      },
+    },
+    { $sort: { discount: -1, uses: -1 } },
+    { $limit: limit },
+    {
+      $project: {
+        _id: 0,
+        code: { $toString: '$_id' },
+        uses: 1,
+        discount: 1,
+        subtotal: 1,
+      },
+    },
+  ])
+  return rows
+}
+
 export const DashboardService = {
   getOverview,
   getRevenueChart,
@@ -336,4 +441,6 @@ export const DashboardService = {
   getDailySalesSeries,
   getMonthlySalesSeries,
   getBestSellingFoods,
+  getCategorySales,
+  getCouponUsage,
 }

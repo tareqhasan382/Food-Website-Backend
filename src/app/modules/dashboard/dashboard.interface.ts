@@ -41,3 +41,16 @@ export type DashboardOverview = {
   todayRevenue: number
   todayOrders: number
 }
+
+export type CategorySalesPoint = {
+  category: string
+  revenue: number
+  quantity: number
+}
+
+export type CouponUsagePoint = {
+  code: string
+  uses: number
+  discount: number
+  subtotal: number
+}

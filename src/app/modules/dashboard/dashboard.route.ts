@@ -56,4 +56,16 @@ router.get(
   DashboardController.getBestSellingFoods
 )
 
+router.get(
+  '/admin/dashboard/reports/category-sales',
+  ...adminGuard,
+  DashboardController.getCategorySales
+)
+
+router.get(
+  '/admin/dashboard/reports/coupon-usage',
+  ...adminGuard,
+  DashboardController.getCouponUsage
+)
+
 export const DashboardRoute = router
