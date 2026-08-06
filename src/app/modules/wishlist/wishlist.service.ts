@@ -60,7 +60,7 @@ const buildWishlistResponse = async (
 ): Promise<IWishlistResponse> => {
   const foods = await FoodModel.find(
     { _id: { $in: wishlist.items } },
-    'name price discountPrice images stock availability'
+    'name price discountPrice images stock availability rating ratingCount category description'
   )
 
   return {

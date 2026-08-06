@@ -12,7 +12,6 @@ import {
   PaymentStatus,
 } from './payment.interface'
 import { CartService } from '../cart/cart.service'
-import CartModel from '../cart/cart.model'
 import AuthModel from '../auth/auth.model'
 import { emailService } from '../email/email.service'
 import { InvoiceService } from '../invoice/invoice.service'
@@ -99,11 +98,6 @@ const syncFromIntent = async (
     payment.paidAt = payment.paidAt ?? new Date()
 
     if (previousStatus !== 'succeeded') {
-      await CartModel.findOneAndUpdate(
-        { userId: payment.userId },
-        { $set: { items: [] } }
-      )
-
       const user = await AuthModel.findById(payment.userId, 'name email')
       if (user) {
         await emailService.sendPaymentSuccessEmail(user.email, {

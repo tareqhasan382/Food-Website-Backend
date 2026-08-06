@@ -5,23 +5,9 @@ import sendResponse from '../../../shared/sendResponse'
 import { CategoryService } from './category.service'
 import { ICategory, ICategoryTree, ICreateCategory, IUpdateCategory } from './category.interface'
 
-const normalizePayload = (req: Request): Record<string, unknown> => {
-  const body = { ...req.body } as Record<string, unknown>
-  if (req.file?.path) {
-    body.image = req.file.path
-  }
-  if (body.parent === '' || body.parent === 'null') {
-    body.parent = null
-  }
-  if (body.isActive !== undefined) {
-    body.isActive = body.isActive === true || body.isActive === 'true'
-  }
-  return body
-}
-
 const createCategory = catchAsync(async (req: Request, res: Response) => {
   const result = await CategoryService.createCategory(
-    normalizePayload(req) as ICreateCategory
+    req.body as ICreateCategory
   )
 
   sendResponse<ICategory>(res, {
@@ -35,7 +21,7 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
 const updateCategory = catchAsync(async (req: Request, res: Response) => {
   const result = await CategoryService.updateCategory(
     req.params.id,
-    normalizePayload(req) as IUpdateCategory
+    req.body as IUpdateCategory
   )
 
   sendResponse<ICategory>(res, {

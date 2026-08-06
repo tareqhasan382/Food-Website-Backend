@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { FoodCategories, IFood, IFoodModel } from './food.interface'
+import { IFood, IFoodModel } from './food.interface'
 
 const foodSchema = new Schema<IFood>(
   {
@@ -7,7 +7,7 @@ const foodSchema = new Schema<IFood>(
     description: { type: String, required: true, trim: true },
     price: { type: Number, required: true, min: 0 },
     discountPrice: { type: Number, min: 0 },
-    category: { type: String, enum: FoodCategories, required: true },
+    category: { type: String, required: true, trim: true },
     images: [{ type: String, required: true }],
     stock: { type: Number, required: true, min: 0, default: 0 },
     ingredients: [{ type: String, trim: true }],

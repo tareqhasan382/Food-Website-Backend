@@ -17,6 +17,9 @@ import {
 const POPULAR_RATING_THRESHOLD = 4
 const LATEST_DAYS = 30
 
+const escapeRegExp = (text: string): string =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 const asNumber = (value: unknown): number | undefined => {
   if (value === undefined || value === null || value === '') return undefined
   const num = Number(value)
@@ -124,7 +127,7 @@ const getAllFoods = async (
   if (searchTerm) {
     andConditions.push({
       $or: FoodSearchableFields.map(field => ({
-        [field]: { $regex: searchTerm, $options: 'i' },
+        [field]: { $regex: escapeRegExp(searchTerm), $options: 'i' },
       })),
     })
   }

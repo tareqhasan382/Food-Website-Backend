@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { FoodCategories } from './food.interface'
 
 const createFoodZodSchema = z.object({
   body: z
@@ -16,11 +15,11 @@ const createFoodZodSchema = z.object({
         .number({ required_error: 'Price is required' })
         .positive('Price must be greater than 0'),
       discountPrice: z.number().nonnegative().optional(),
-      category: z.enum(FoodCategories, {
-        errorMap: () => ({
-          message: `Category must be one of: ${FoodCategories.join(', ')}`,
-        }),
-      }),
+      category: z
+        .string({ required_error: 'Category is required' })
+        .trim()
+        .min(1, 'Category is required')
+        .max(60, 'Category must be at most 60 characters'),
       images: z
         .array(z.string().url('Each image must be a valid url'))
         .min(1, 'At least one image is required')
@@ -56,7 +55,12 @@ const updateFoodZodSchema = z.object({
         .optional(),
       price: z.number().positive('Price must be greater than 0').optional(),
       discountPrice: z.number().nonnegative().optional(),
-      category: z.enum(FoodCategories).optional(),
+      category: z
+        .string()
+        .trim()
+        .min(1, 'Category is required')
+        .max(60, 'Category must be at most 60 characters')
+        .optional(),
       images: z
         .array(z.string().url('Each image must be a valid url'))
         .min(1, 'At least one image is required')

@@ -46,6 +46,16 @@ const placeOrder = async (
   userId: string,
   payload: { paymentId?: string; deliveryAddress?: unknown }
 ): Promise<IOrder> => {
+  if (payload.paymentId) {
+    const existing = await OrderModel.findOne({
+      paymentId: payload.paymentId,
+      userId,
+    })
+    if (existing) {
+      return existing.toObject()
+    }
+  }
+
   const cart = await CartService.getCart(userId)
   if (!cart.items.length) {
     throw new ApiError(

@@ -30,6 +30,35 @@ const toArray = (value: unknown): string[] | undefined => {
 }
 
 /**
+ * multer parses multipart fields like `ingredients[0]`, `images[2]` into
+ * literal keys on req.body (e.g. `'ingredients[0]': 'x'`). Collect those
+ * bracket-indexed fields back into an ordered array.
+ */
+const collectIndexedFields = (
+  body: Record<string, unknown>,
+  key: string
+): string[] => {
+  const prefix = `${key}[`
+  const entries = Object.entries(body).filter(
+    ([name]) => name.startsWith(prefix) && name.endsWith(']')
+  )
+
+  const collected: string[] = []
+  let hasMatch = false
+  for (const [name, value] of entries) {
+    const indexStr = name.slice(prefix.length, -1)
+    const index = Number(indexStr)
+    if (Number.isInteger(index) && index >= 0 && value !== undefined) {
+      collected[index] = String(value)
+      hasMatch = true
+    }
+  }
+  return hasMatch
+    ? collected.filter(item => item !== undefined)
+    : []
+}
+
+/**
  * Normalizes a food payload coming from multipart/form-data (strings)
  * or JSON into typed fields, merging any Cloudinary-uploaded files
  * with provided image URLs.
@@ -43,12 +72,18 @@ export const normalizeFoodBody = (
   const files = req.files as Express.Multer.File[] | undefined
   const uploadedImages = files?.map(file => file.path).filter(Boolean) ?? []
 
-  const bodyImages = toArray(body.images) ?? []
+  const bodyImages = toArray(body.images) ?? collectIndexedFields(body, 'images')
   const images = [...bodyImages, ...uploadedImages]
+
+  const bodyIngredients =
+    toArray(body.ingredients) ?? collectIndexedFields(body, 'ingredients')
 
   const normalized: Record<string, unknown> = { ...body }
   if (images.length) {
     normalized.images = images
+  }
+  if (bodyIngredients && bodyIngredients.length) {
+    normalized.ingredients = bodyIngredients
   }
   if (body.price !== undefined) normalized.price = toNumber(body.price)
   if (body.discountPrice !== undefined)
@@ -60,8 +95,6 @@ export const normalizeFoodBody = (
   if (body.rating !== undefined) normalized.rating = toNumber(body.rating)
   if (body.availability !== undefined)
     normalized.availability = toBoolean(body.availability)
-  if (body.ingredients !== undefined)
-    normalized.ingredients = toArray(body.ingredients)
 
   req.body = normalized
   next()

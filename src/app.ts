@@ -20,9 +20,7 @@ import { InvoiceRoute } from './app/modules/invoice/invoice.route'
 
 const corsOptions = {
   origin: [
-    'http://localhost:5173',
-    'https://food-website-henna.vercel.app',
-    'https://full-stack-food-website.vercel.app',
+    'http://localhost:5173'
   ],
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,

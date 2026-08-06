@@ -1,17 +1,6 @@
 import { Model } from 'mongoose'
 
-export const FoodCategories = [
-  'pizza',
-  'burger',
-  'dessert',
-  'drink',
-  'salad',
-  'fastfood',
-  'breakfast',
-  'other',
-] as const
-
-export type FoodCategory = (typeof FoodCategories)[number]
+export type FoodCategory = string
 
 export const FoodSearchableFields = ['name', 'description', 'category']
 export const FoodFilterableFields = [

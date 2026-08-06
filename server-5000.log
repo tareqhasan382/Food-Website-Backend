@@ -1,0 +1,6 @@
+
+> food-app_nodejs@1.0.0 start
+> node dist/server.js
+
+Database is connected successfully
+Application Food app listening on port 5000

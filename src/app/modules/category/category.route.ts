@@ -5,6 +5,7 @@ import { Permissions } from '../../../constants/permissions'
 import { categoryImageUpload } from '../../../shared/cloudinaryUpload'
 import { CategoryController } from './category.controller'
 import { CategoryValidation } from './category.validation'
+import { normalizeCategoryBody } from './category.middleware'
 
 const router = express.Router()
 
@@ -22,6 +23,7 @@ router.post(
   authenticate,
   authorize(Permissions.CATEGORY_CREATE),
   categoryImageUpload,
+  normalizeCategoryBody,
   validateRequest(CategoryValidation.createCategoryZodSchema),
   CategoryController.createCategory
 )
@@ -32,6 +34,7 @@ router.patch(
   authorize(Permissions.CATEGORY_UPDATE),
   validateRequest(CategoryValidation.categoryIdZodSchema),
   categoryImageUpload,
+  normalizeCategoryBody,
   validateRequest(CategoryValidation.updateCategoryZodSchema),
   CategoryController.updateCategory
 )
