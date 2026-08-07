@@ -1,8 +1,10 @@
 import express, { Application, NextFunction, Request, Response } from 'express'
 const app: Application = express()
 app.set('trust proxy', 1) // Render/Vercel terminate TLS; enables secure cookies behind the proxy
+import helmet from 'helmet'
 import cors from 'cors'
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
+import { apiRateLimiter } from './app/middlewares/rateLimiter'
 import httpStatus from 'http-status'
 //import ApiError from './errors/ApiError'
 import { AuthRoute } from './app/modules/auth/auth.route'
@@ -28,6 +30,7 @@ const corsOptions = {
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 }
+app.use(helmet()) // secure HTTP headers (CSP, X-Frame-Options, HSTS, etc.)
 app.use(cors(corsOptions))
 // app.use(cors(corsOptions))
 app.use(cookieParser())
@@ -36,6 +39,8 @@ app.use(
   '/api/v1/payments/webhook',
   express.raw({ type: 'application/json' })
 )
+// Rate limiting before body parsing so throttled requests are rejected fast
+app.use(apiRateLimiter)
 //parser
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

@@ -43,6 +43,7 @@ It centralizes everything a restaurant needs to run online ordering:
 | Payments      | Stripe                                    |
 | Uploads       | Cloudinary (multer)                      |
 | Emails        | Resend                                   |
+| Security      | Helmet, express-rate-limit               |
 | Error handling| Centralized `globalErrorHandler` + `ApiError` |
 
 ## Architecture
@@ -216,4 +217,4 @@ One invoice is generated per order (`orderId` unique), snapshotting the order at
 - **Centralized errors** — every thrown `ApiError` (and Zod/unknown errors) is formatted by `globalErrorHandler`; route fallback returns a consistent 404 JSON.
 - **Email resilience** — Resend failures are logged and swallowed so order/payment/auth flows never fail because mail is down.
 - **Optimized queries** — compound indexes on the hottest paths (`status + createdAt`), `$facet` single-pass dashboards, atomic coupon consumption with `findOneAndUpdate` + `$expr` guard.
-- **Security** — bcrypt password hashing, JWT refresh-token rotation, signed webhooks, owner-scoped queries for user data, Zod validation on every body/params/query input.
+- **Security** — bcrypt password hashing, JWT refresh-token rotation, signed webhooks, owner-scoped queries for user data, Zod validation on every body/params/query input, Helmet security headers, and rate limiting (global API + stricter limits on auth endpoints).

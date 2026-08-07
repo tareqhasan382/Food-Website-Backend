@@ -28,6 +28,11 @@ export default {
     charge: Number(process.env.DELIVERY_CHARGE) || 5,
     free_above: Number(process.env.FREE_DELIVERY_THRESHOLD) || 500,
   },
+  rate_limit: {
+    window_minutes: Number(process.env.RATE_LIMIT_WINDOW_MINUTES) || 15,
+    api_max: Number(process.env.RATE_LIMIT_API_MAX) || 300,
+    auth_max: Number(process.env.RATE_LIMIT_AUTH_MAX) || 20,
+  },
   stripe: {
     secret_key: process.env.STRIPE_SECRET_KEY || '',
     publishable_key: process.env.STRIPE_PUBLISHABLE_KEY || '',
