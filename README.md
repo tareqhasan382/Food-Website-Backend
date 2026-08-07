@@ -2,7 +2,17 @@
 
 A production-ready Food Ordering backend built with **Node.js, Express.js, TypeScript, MongoDB, and Mongoose**.
 
-Modular architecture with a strict layered split (Route → Controller → Service → Model/Repository), centralized error handling, Zod validation, JWT auth with refresh tokens, and RBAC.
+## Overview
+
+This is the API behind the food ordering platform. It powers the customer storefront and the admin dashboard: authentication, food and category management, cart and wishlist, coupon discounts, Stripe payments, order lifecycle with invoices, reviews, email notifications, and dashboard analytics.
+
+## What This Project Solves
+
+It centralizes everything a restaurant needs to run online ordering:
+
+- **Customers** get a secure API for registering, ordering, applying coupons, paying online, and tracking orders with digital invoices.
+- **Admins** get full control over foods, categories, coupons, promotions, orders, and users, plus revenue and sales analytics.
+- It replaces manual phone ordering and spreadsheets with a single, well-structured REST API that is easy to extend and scale.
 
 ## Features
 
@@ -17,7 +27,7 @@ Modular architecture with a strict layered split (Route → Controller → Servi
 - **Order Management** — status machine with enforced transitions, cancellation
 - **Review & Rating** — per-food reviews, average rating, admin moderation not required
 - **Cloudinary Upload** — image upload for foods and categories
-- **Email Notifications** — Nodemailer + reusable HTML templates (welcome, verify, reset, password-changed, order placed/delivered, payment success)
+- **Email Notifications** — Resend + reusable HTML templates (welcome, verify, reset, password-changed, order placed/delivered, payment success)
 - **Invoice** — auto-generated printable invoice per order (JSON + HTML view/download), status synced with order/payment lifecycle
 - **Dashboard Analytics** — revenue, sales (daily/monthly), charts, best-selling foods, single-scan `$facet` pipelines
 
@@ -32,7 +42,7 @@ Modular architecture with a strict layered split (Route → Controller → Servi
 | Auth          | jsonwebtoken, bcrypt                      |
 | Payments      | Stripe                                    |
 | Uploads       | Cloudinary (multer)                      |
-| Emails        | Nodemailer                               |
+| Emails        | Resend                                   |
 | Error handling| Centralized `globalErrorHandler` + `ApiError` |
 
 ## Architecture

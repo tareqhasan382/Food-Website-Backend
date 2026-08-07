@@ -1,0 +1,1 @@
+mongodb+srv://Image_Gullery:JcM8Yofcm23eablz@atlascluster.xl4pwct.mongodb.net/Food-Resturant?retryWrites=true&w=majority
