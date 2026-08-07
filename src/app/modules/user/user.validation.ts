@@ -12,10 +12,12 @@ const updateProfileZodSchema = z.object({
   }),
 })
 
+// Role assignment is locked down: only downgrading a user to 'user' is allowed.
+// Promoting anyone to admin/superAdmin via the API is disabled.
 const updateRoleZodSchema = z.object({
   body: z.object({
-    role: z.enum([UserRoles.ADMIN, UserRoles.USER], {
-      errorMap: () => ({ message: 'Role must be admin or user' }),
+    role: z.literal(UserRoles.USER, {
+      errorMap: () => ({ message: 'Role cannot be changed' }),
     }),
   }),
 })

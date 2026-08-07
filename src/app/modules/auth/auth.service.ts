@@ -56,10 +56,11 @@ const registerUser = async (
     verificationTokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
   })
 
-  await emailService.sendVerificationEmail(user.email, {
+  // Fire-and-forget: never block the registration response on email delivery.
+  emailService.sendVerificationEmail(user.email, {
     verifyUrl: `${config.client_url}/verify-email?token=${verificationToken}`,
   })
-  await emailService.sendWelcomeEmail(user.email, { name: user.name })
+  emailService.sendWelcomeEmail(user.email, { name: user.name })
 
   const safeUser: Partial<IUser> = { ...user }
   delete safeUser.password

@@ -3,6 +3,7 @@ import { SortOrder } from 'mongoose'
 import ApiError from '../../../errors/ApiError'
 import { IGenericResponse } from '../../../interface/common'
 import AuthModel from '../auth/auth.model'
+import { UserRoles } from '../../../constants/roles'
 import { IUser } from '../auth/auth.interface'
 
 const SAFE_PROJECTION = {
@@ -50,6 +51,14 @@ const updateUserRole = async (
   id: string,
   role: IUser['role']
 ): Promise<IUser> => {
+  // Locked down: nobody (including admins) can promote anyone to admin/superAdmin.
+  if (role === UserRoles.ADMIN || role === UserRoles.SUPER_ADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Assigning the admin role is not allowed'
+    )
+  }
+
   const user = await AuthModel.findByIdAndUpdate(
     id,
     { role },

@@ -28,6 +28,10 @@ const createTransporter = (): Transporter => {
       user: config.email.user,
       pass: config.email.pass,
     },
+    // Fail fast when SMTP is unreachable so request handlers never hang
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   })
 }
 
