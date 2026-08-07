@@ -71,7 +71,7 @@ Layers communicate one-way: **Route → Controller → Service → Repository/Mo
 cp .env.example .env
 ```
 
-Fill in `DATABASE_URL`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, Stripe keys, SMTP credentials (Gmail requires an App Password), and Cloudinary keys.
+Fill in `DATABASE_URL`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, Stripe keys, Resend (`RESEND_API_KEY`), and Cloudinary keys.
 
 ### 2. Install & run
 
@@ -204,6 +204,6 @@ One invoice is generated per order (`orderId` unique), snapshotting the order at
 ## Design Notes
 
 - **Centralized errors** — every thrown `ApiError` (and Zod/unknown errors) is formatted by `globalErrorHandler`; route fallback returns a consistent 404 JSON.
-- **Email resilience** — SMTP failures are logged and swallowed so order/payment/auth flows never fail because mail is down.
+- **Email resilience** — Resend failures are logged and swallowed so order/payment/auth flows never fail because mail is down.
 - **Optimized queries** — compound indexes on the hottest paths (`status + createdAt`), `$facet` single-pass dashboards, atomic coupon consumption with `findOneAndUpdate` + `$expr` guard.
 - **Security** — bcrypt password hashing, JWT refresh-token rotation, signed webhooks, owner-scoped queries for user data, Zod validation on every body/params/query input.

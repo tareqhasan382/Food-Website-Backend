@@ -14,13 +14,9 @@ export default {
     expires_in: process.env.JWT_EXPIRES_IN,
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
   },
-  email: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: process.env.SMTP_SECURE === 'true',
-    from: process.env.EMAIL_FROM,
+  resend: {
+    api_key: process.env.RESEND_API_KEY,
+    from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
   },
   cloudinary: {
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

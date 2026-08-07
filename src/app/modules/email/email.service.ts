@@ -1,4 +1,4 @@
-import nodemailer, { Transporter } from 'nodemailer'
+import { Resend } from 'resend'
 import config from '../../../config'
 import {
   welcomeTemplate,
@@ -19,20 +19,9 @@ import {
   WelcomeEmailData,
 } from './email.interface'
 
-const createTransporter = (): Transporter => {
-  return nodemailer.createTransport({
-    host: config.email.host,
-    port: config.email.port,
-    secure: config.email.secure,
-    auth: {
-      user: config.email.user,
-      pass: config.email.pass,
-    },
-    // Fail fast when SMTP is unreachable so request handlers never hang
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
-  })
+const createResend = (): Resend | null => {
+  if (!config.resend.api_key) return null
+  return new Resend(config.resend.api_key)
 }
 
 const sendMail = async (
@@ -40,17 +29,19 @@ const sendMail = async (
   subject: string,
   html: string
 ): Promise<void> => {
-  if (!config.email.user || !config.email.pass) {
-    console.warn('SMTP is not configured. Skipping email notification.')
+  if (!config.resend.api_key) {
+    console.warn('Resend is not configured. Skipping email notification.')
     return
   }
-  const transporter = createTransporter()
-  await transporter.sendMail({
-    from: config.email.from,
+  const resend = createResend()
+  if (!resend) return
+  const { error } = await resend.emails.send({
+    from: config.resend.from,
     to,
     subject,
     html,
   })
+  if (error) throw new Error(error.message)
 }
 
 // Never break the primary flow (registration, order, payment) on mail failure.
