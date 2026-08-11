@@ -27,7 +27,7 @@ const createTransporter = (): Transporter | null => {
     transporter = nodemailer.createTransport({
       host: config.smtp.host,
       port: config.smtp.port,
-      secure: config.smtp.port === 465,
+      secure: true,
       auth: {
         user: config.smtp.user,
         pass: config.smtp.pass,
