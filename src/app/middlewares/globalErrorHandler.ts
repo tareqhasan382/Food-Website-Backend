@@ -100,13 +100,16 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
       : []
   }
 
+  if (res.headersSent) {
+    return next(error)
+  }
+
   res.status(statusCode).json({
     success: false,
     message,
     errorMessages,
     stack: config.env !== 'production' ? error?.stack : undefined,
   })
-  next()
 }
 
 //=======handleCastError======================

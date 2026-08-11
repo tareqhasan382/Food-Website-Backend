@@ -68,7 +68,7 @@ app.use('/api/v1', PromotionRoute)
 app.use(globalErrorHandler)
 
 // route not found
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, res: Response) => {
   res.status(httpStatus.BAD_REQUEST).json({
     success: false,
     messase: 'Not Found',
@@ -79,7 +79,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
       },
     ],
   })
-  next()
 })
 
 export default app
