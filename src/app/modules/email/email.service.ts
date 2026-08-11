@@ -21,7 +21,7 @@ import {
 
 let transporter: Transporter | null = null
 
-const createTransporter = (): Transporter | null => {
+const createTransporter = (): Transporter | null => { 
   if (!config.smtp.host || !config.smtp.user) return null
   if (!transporter) {
     transporter = nodemailer.createTransport({
