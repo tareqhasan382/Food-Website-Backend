@@ -6,6 +6,9 @@ config.bat
 # Secrets
 .env
 
+# Editor
+.vscode/
+
 # Logs & runtime artifacts
 logs/
 *.log
